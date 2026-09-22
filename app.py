@@ -15,30 +15,20 @@ if st.button("Scan for Threats"):
     if user_input.strip():
         with st.spinner("Analyzing text for red flags..."):
             try:
-                # Dynamically find a working model for this specific API key
-                working_model_name = None
-                for m in genai.list_models():
-                    if 'generateContent' in m.supported_generation_methods:
-                        working_model_name = m.name
-                        break
+                # Upgraded to the required gemini-3.6-flash model
+                model = genai.GenerativeModel('gemini-3.6-flash')
+                prompt = f"""
+                Analyze the following job offer text for a security scan.
+                1. Identify payment demand red flags (e.g., pay-for-equipment, deposit traps).
+                2. Check for unusual urgency or unprofessional language.
+                3. Calculate a dynamic Scam Threat Index from 0 to 100%.
                 
-                if not working_model_name:
-                    st.error("SYSTEM ERROR: No compatible text generation models found for your API key.")
-                else:
-                    model = genai.GenerativeModel(working_model_name)
-                    prompt = f"""
-                    Analyze the following job offer text for a security scan.
-                    1. Identify payment demand red flags (e.g., pay-for-equipment, deposit traps).
-                    2. Check for unusual urgency or unprofessional language.
-                    3. Calculate a dynamic Scam Threat Index from 0 to 100%.
-                    
-                    Provide a concise summary, list the red flags as bullet points, and display the final Scam Threat Index in bold at the top.
-                    
-                    Job Offer: {user_input}
-                    """
-                    response = model.generate_content(prompt)
-                    st.markdown(f"*(Auto-detected model: {working_model_name})*")
-                    st.markdown(response.text)
+                Provide a concise summary, list the red flags as bullet points, and display the final Scam Threat Index in bold at the top.
+                
+                Job Offer: {user_input}
+                """
+                response = model.generate_content(prompt)
+                st.markdown(response.text)
             except Exception as e:
                 st.error(f"SYSTEM ERROR: {e}")
     else:
