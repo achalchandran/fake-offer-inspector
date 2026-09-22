@@ -1,6 +1,18 @@
+import streamlit as st
+import google.generativeai as genai
+
+st.set_page_config(page_title="Phishing Inspector", page_icon="🕵️")
+
+st.title("Fake Offer Letter & Phishing Inspector")
+st.write("Paste a suspicious job offer below to calculate its Scam Threat Index.")
+
+# Configure API key securely using Streamlit Secrets
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+
+user_input = st.text_area("Job Offer Text:", height=200)
+
 if st.button("Scan for Threats"):
     if user_input.strip():
-        # This spinner keeps the user informed while the model processes the text
         with st.spinner("🕵️ Analyzing text for scam indicators and calculating threat index... Please wait."):
             try:
                 model = genai.GenerativeModel('gemini-3.6-flash')
