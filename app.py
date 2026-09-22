@@ -15,7 +15,8 @@ if st.button("Scan for Threats"):
     if user_input.strip():
         with st.spinner("Analyzing text for red flags..."):
             try:
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                # Swapped to gemini-pro to bypass the 404 error
+                model = genai.GenerativeModel('gemini-pro')
                 prompt = f"""
                 Analyze the following job offer text for a security scan.
                 1. Identify payment demand red flags (e.g., pay-for-equipment, deposit traps).
@@ -29,7 +30,6 @@ if st.button("Scan for Threats"):
                 response = model.generate_content(prompt)
                 st.markdown(response.text)
             except Exception as e:
-                # This will now show us the REAL error message!
                 st.error(f"SYSTEM ERROR: {e}")
     else:
         st.warning("Please paste some text to scan.")
