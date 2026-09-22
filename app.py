@@ -29,6 +29,7 @@ if st.button("Scan for Threats"):
                 response = model.generate_content(prompt)
                 st.markdown(response.text)
             except Exception as e:
-                st.error("Please make sure your API key is configured correctly in the deployment settings.")
+                # This will now show us the REAL error message!
+                st.error(f"SYSTEM ERROR: {e}")
     else:
         st.warning("Please paste some text to scan.")
